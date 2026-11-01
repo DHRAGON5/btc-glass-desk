@@ -8,5 +8,5 @@ assert.equal(response.status,200);assert.match(await response.text(),/BTC Glass 
 const originalFetch=globalThis.fetch;
 globalThis.fetch=async()=>new Response(`<?xml version="1.0"?><rss><channel><item><title><![CDATA[ Bitcoin falls after exchange hack ]]></title><link>https://example.com/bitcoin-hack</link><guid>news-1</guid><pubDate>Sun, 01 Nov 2026 20:00:00 +0000</pubDate><description><![CDATA[ Bitcoin market reacts to the hack. ]]></description><category><![CDATA[ Bitcoin News ]]></category></item></channel></rss>`,{status:200});
 const newsResponse=await worker.default.fetch(new Request('https://example.test/api/news'),{}, {waitUntil(){}}),news=await newsResponse.json();
-globalThis.fetch=originalFetch;assert.equal(newsResponse.status,200);assert.equal(news.Data[0].title,'Bitcoin falls after exchange hack');assert.equal(news.Data[0].source_info.name,'CoinDesk');
+globalThis.fetch=originalFetch;assert.equal(newsResponse.status,200);assert.equal(news.Data.length,2);assert.equal(news.Data[0].title,'Bitcoin falls after exchange hack');assert.equal(news.Data[0].source_info.name,'CoinDesk');assert.equal(news.Data[1].source_info.name,'Cointelegraph');
 console.log('Worker Paket gültig');
