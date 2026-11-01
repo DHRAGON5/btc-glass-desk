@@ -1,0 +1,31 @@
+services:
+  desk:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATA_DIR: /data
+      PORT: 3000
+    volumes:
+      - desk_data:/data
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?DOMAIN in .env setzen}
+      ACME_EMAIL: ${ACME_EMAIL:?ACME_EMAIL in .env setzen}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - desk
+volumes:
+  desk_data:
+  caddy_data:
+  caddy_config:

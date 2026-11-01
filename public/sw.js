@@ -1,0 +1,10 @@
+const CACHE='btc-desk-v3-edge';
+self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);await cache.addAll(['/','/manifest.webmanifest','/icons/icon-192.png','/icons/icon-512.png']);const html=await (await cache.match('/')).text();const assets=[...html.matchAll(/(?:src|href)="(\/assets\/[^\"]+)"/g)].map(x=>x[1]);await cache.addAll(assets);self.skipWaiting();})()));
+self.addEventListener('activate',event=>event.waitUntil((async()=>{for(const key of await caches.keys())if(key!==CACHE)await caches.delete(key);await self.clients.claim();})()));
+self.addEventListener('fetch',event=>{
+  const url=new URL(event.request.url);if(event.request.method!=='GET'||url.origin!==location.origin||url.pathname.startsWith('/api/')||url.pathname==='/stream')return;
+  if(event.request.mode==='navigate'){event.respondWith(fetch(event.request).then(async response=>{if(response.ok){const cache=await caches.open(CACHE);cache.put('/',response.clone());}return response;}).catch(()=>caches.match('/')));return;}
+  if(url.pathname.startsWith('/assets/')||url.pathname.startsWith('/icons/'))event.respondWith(caches.match(event.request).then(x=>x||fetch(event.request).then(async response=>{if(response.ok)(await caches.open(CACHE)).put(event.request,response.clone());return response;})));
+});
+self.addEventListener('push',event=>event.waitUntil((async()=>{let data={title:'BTC Glass Desk',body:'Eine neue Nachricht liegt vor.',url:'/'};try{data={...data,...event.data.json()};}catch{}await self.registration.showNotification(data.title,{body:data.body,tag:data.tag||'btc-desk',icon:'/icons/icon-192.png',badge:'/icons/icon-192.png',data:{url:typeof data.url==='string'&&data.url.startsWith('/')&&!data.url.startsWith('//')?data.url:'/'}});})()));
+self.addEventListener('notificationclick',event=>{event.notification.close();event.waitUntil((async()=>{const path=event.notification.data?.url||'/';for(const client of await clients.matchAll({type:'window',includeUncontrolled:true})){if(new URL(client.url).origin===location.origin){await client.navigate(path);return client.focus();}}return clients.openWindow(path);})());});

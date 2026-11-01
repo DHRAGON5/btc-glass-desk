@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const source=await readFile(new URL('../dist/server/index.js',import.meta.url),'utf8');
+const moduleUrl=`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`;
+const worker=await import(moduleUrl);assert.equal(typeof worker.default?.fetch,'function');
+const response=await worker.default.fetch(new Request('https://example.test/'),{}, {waitUntil(){}});
+assert.equal(response.status,200);assert.match(await response.text(),/BTC Glass Desk/);
+const originalFetch=globalThis.fetch;
+globalThis.fetch=async()=>new Response(`<?xml version="1.0"?><rss><channel><item><title><![CDATA[ Bitcoin falls after exchange hack ]]></title><link>https://example.com/bitcoin-hack</link><guid>news-1</guid><pubDate>Sun, 01 Nov 2026 20:00:00 +0000</pubDate><description><![CDATA[ Bitcoin market reacts to the hack. ]]></description><category><![CDATA[ Bitcoin News ]]></category></item></channel></rss>`,{status:200});
+const newsResponse=await worker.default.fetch(new Request('https://example.test/api/news'),{}, {waitUntil(){}}),news=await newsResponse.json();
+globalThis.fetch=originalFetch;assert.equal(newsResponse.status,200);assert.equal(news.Data[0].title,'Bitcoin falls after exchange hack');assert.equal(news.Data[0].source_info.name,'CoinDesk');
+console.log('Worker Paket gültig');

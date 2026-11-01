@@ -1,0 +1,14 @@
+services:
+  desk:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: development
+      DATA_DIR: /data
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - desk_data:/data
+volumes:
+  desk_data:

@@ -1,0 +1,123 @@
+/* Neutral glass. Color is reserved for market direction and data health. */
+:root {
+  color-scheme: dark;
+  background: #111111;
+  --mint: #88dfc8;
+  --pink: #e69cac;
+  --violet: #d0d0d0;
+  --muted: #a1a1a1;
+  --line: rgba(255, 255, 255, .12);
+}
+body {
+  background: radial-gradient(ellipse at 7% 4%, #ffffff09, transparent 50%),
+              radial-gradient(ellipse at 95% 58%, #ffffff06, transparent 50%);
+}
+.ambient.one { background: radial-gradient(ellipse, #ffffff28, transparent 70%); }
+.ambient.two { background: radial-gradient(ellipse, #ffffff13, transparent 70%); }
+.brand-icon, h1 > span, .rule-number, .rule-number.violet, .orbit { color: #eeeeee; }
+.brand-icon { background: linear-gradient(135deg, #ffffff14, #ffffff03); border-color: #ffffff26; }
+.nav.active:after { background: #ededed; box-shadow: 0 0 12px #ffffff50; }
+.topbar { background: #ffffff03; }
+.glass {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(125deg, #ffffff0c, #ffffff03 70%);
+  border-color: #ffffff1b;
+  border-top-color: #ffffff2b;
+  box-shadow: 0 12px 36px #00000012, inset 0 1px 0 #ffffff05;
+  transition: transform 300ms cubic-bezier(.2,.7,.2,1), border-color 300ms ease, box-shadow 300ms ease;
+}
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  background: radial-gradient(360px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), #ffffff15, transparent 75%);
+  transition: opacity 350ms ease;
+}
+.primary-button { background: linear-gradient(130deg, #ffffff1d, #ffffff08); color: #f3f3f3; border-color: #ffffff30; }
+.glass-button, .primary-button, .icon-button, .nav {
+  position: relative;
+  overflow: clip;
+  transition: transform 200ms cubic-bezier(.2,.7,.2,1), background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+/* Keep the desktop navigation underline outside its button. */
+.nav { overflow: visible; }
+.nav .glass-ripple { display: none; }
+button:hover { filter: none; }
+button:focus-visible, a:focus-visible { outline-color: #eeeeee; }
+input:focus { border-color: #ffffff80; }
+.check-row input { accent-color: #d9d9d9; }
+dialog { background: linear-gradient(130deg, #333333b8, #171717b8); border-color: #ffffff30; }
+dialog::backdrop { background: #00000065; }
+.chart-empty { background: radial-gradient(ellipse, #22222299, #15151566); }
+.signal-avatar { color: var(--mint); }
+.signal-avatar.short { color: var(--pink); }
+.edge-panel { margin-top: 20px; overflow: hidden; }
+.edge-metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #ffffff12; border-top: 1px solid #ffffff12; border-bottom: 1px solid #ffffff12; }
+.edge-metrics > div { min-height: 88px; padding: 18px 20px; background: #111111b8; display: flex; flex-direction: column; justify-content: center; }
+.edge-metrics span { color: #8f8f8f; font-size: 8px; letter-spacing: 1.1px; }
+.edge-metrics strong { margin-top: 9px; font-size: 18px; font-weight: 520; font-variant-numeric: tabular-nums; }
+.edge-note { color: #999999; font-size: 10px; line-height: 1.7; padding: 14px 20px 17px; }
+.edge-result { margin-top: 10px; padding: 10px 11px; border: 1px solid #ffffff14; border-radius: 8px; background: #ffffff05; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: center; }
+.edge-result span { color: #858585; font-size: 7px; letter-spacing: 1px; }
+.edge-result b { justify-self: end; font-size: 9px; font-weight: 550; }
+.edge-result small { grid-column: 1 / -1; color: #8e8e8e; font-size: 8px; }
+.edge-result.win b { color: var(--mint); }
+.edge-result.loss b { color: var(--pink); }
+.edge-confidence { color: #aaaaaa; font-size: 9px; line-height: 1.5; margin-top: 9px; }
+.profile-tabs { display: inline-flex; gap: 4px; padding: 3px; margin: 0 0 19px; border: 1px solid #ffffff17; border-radius: 9px; background: #00000022; }
+.profile-tabs button { padding: 8px 15px; border-radius: 6px; background: transparent; color: #8f8f8f; font-size: 10px; }
+.profile-tabs button.selected { color: #eeeeee; background: #ffffff10; box-shadow: inset 0 1px 0 #ffffff12; }
+.profile-panel { padding-bottom: 2px; }
+#toast { background: #303030da; color: #eeeeee; border-color: #ffffff30; backdrop-filter: blur(25px); }
+.glass-ripple {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  width: var(--ripple-size);
+  height: var(--ripple-size);
+  background: radial-gradient(circle, #ffffff35, #ffffff08 55%, transparent 70%);
+  transform: translate(-50%, -50%) scale(0);
+  animation: glass-ripple 650ms ease-out forwards;
+}
+@keyframes glass-ripple {
+  to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .glass.pointer-active {
+    border-color: #ffffff3d;
+    box-shadow: 0 18px 44px #00000028, inset 0 1px 0 #ffffff0c;
+  }
+  .glass.pointer-active::before { opacity: 1; }
+  :is(.stat, .rule-card, .agent-card).pointer-active {
+    transform: perspective(900px) translateY(-4px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  }
+  :is(.glass-button, .primary-button, .icon-button, .nav):not(:disabled):hover {
+    transform: translateY(-2px);
+    background-color: #ffffff0d;
+    box-shadow: 0 7px 18px #00000020, inset 0 1px 0 #ffffff12;
+  }
+  :is(.glass-button, .primary-button, .icon-button, .nav):not(:disabled):active {
+    transform: translateY(0) scale(.96);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .glass { transform: none !important; }
+  .glass-ripple { display: none; }
+}
+@media (max-width: 930px) {
+  .edge-metrics { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .edge-metrics { grid-template-columns: repeat(2, 1fr); }
+  .edge-metrics > div { min-height: 76px; padding: 14px; }
+  .edge-metrics strong { font-size: 15px; }
+  .edge-note { padding: 13px 15px 16px; }
+  .profile-tabs { width: 100%; }
+  .profile-tabs button { flex: 1; }
+}

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist-web/
+.env
+.env.*
+!.env.example
+data/
+*.log
+.openai/*.local.*

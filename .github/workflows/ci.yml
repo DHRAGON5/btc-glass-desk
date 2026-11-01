@@ -1,0 +1,25 @@
+name: Validate BTC Glass Desk
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: python3 scripts/package-source.py dist/BTC_Glass_Desk.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTC_Glass_Desk
+          path: dist/BTC_Glass_Desk.zip
+          retention-days: 14

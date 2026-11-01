@@ -1,0 +1,7 @@
+{
+  "name": "btc-glass-desk", "version": "1.0.0", "private": true, "type": "module",
+  "engines": {"node": ">=22.13.0"},
+  "scripts": {"dev": "node scripts/preview-worker.mjs", "dev:web": "vite --host 0.0.0.0", "build": "vite build", "build:site": "vite build --outDir dist-web && node scripts/build-worker.mjs", "validate:site": "node scripts/validate-worker.mjs", "start": "node server/index.mjs", "setup": "node scripts/setup.mjs", "test": "node --test tests/*.test.mjs", "backtest": "node scripts/backtest.mjs"},
+  "dependencies": {"express":"5.1.0","ws":"8.18.3","web-push":"3.6.7","dotenv":"17.2.3","lightweight-charts":"5.0.9","lossless-json":"4.3.0"},
+  "devDependencies": {"vite":"7.1.12"}
+}
